@@ -47,12 +47,6 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def hola(self, ctx: commands.Context):
-        # Here we have a command hello, we can invoke our command with our prefix and command name
-        # e.g ?hello
-        # We can also give our commands aliases (different names) to invoke with.
-
-        # Send a hello back!
-        # Sending a reply back to the channel is easy... Below is an example.
         await ctx.send(f'Hola {ctx.author.name}, eres un crack!')
         play_file(GREETINGS_FILE)
     
@@ -66,16 +60,11 @@ class Bot(commands.Bot):
         play_file(HEY_HEY_FILE)
 
     async def event_message(self, message):
-        # Messages with echo set to True are messages sent by the bot...
-        # For now we just want to ignore them...
         if message.echo:
             return
 
-        # Print the contents of our message to console...
         print(message.content)
-        #await commands.Context.send(self=commands.Context,content="Ahorita te atiendo")
-        # Since we have commands and are overriding the default `event_message`
-        # We must let the bot know we want to handle and invoke our commands...
+
         ctx = commands.Context(message,self)
         if 'Ramsito' in message.content:
             await self.handle_commands(message)
@@ -84,9 +73,11 @@ class Bot(commands.Bot):
                 joke_to_tell = random.choice(CHISTES)
                 await ctx.send(joke_to_tell)
                 speak_from_text(joke_to_tell)
-            elif any(nice_word  in message.content.lower() for nice_word in ['gusto','gustar','genial','nice']):
+            elif any(nice_word  in message.content.lower() for nice_word in ['gusto','gustar','genial','nice','cool','bendicion','bendición','excelente','yei']):
                 play_file(BLESSING_FILE)
+            elif 'http' in message.content.lower():
+                speak_from_text(f'{ctx.author.name} envió un URL')
             else: 
-                speak_from_text(f'Ahorita te atiendo {ctx.author.name}')
+                speak_from_text(f'{ctx.author.name} dice {message.content}')
 bot = Bot()
 bot.run()
